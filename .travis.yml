@@ -1,33 +1,31 @@
 language: cpp
-sudo: false
 compiler:
   - gcc
-  - clang
+# - clang
 addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
     - llvm-toolchain-precise-3.6
+    - boost-latest
     packages:
     - build-essential
     - g++-5
     - clang-3.6
+    - libboost1.55
 cache:
   directories:
-  - $HOME/boost_temp
+  - $HOME/cmake_temp
 install:
 # Set compiler versions to something modern
   - export TOOL_NAME=$CC
   - test $CC = gcc && export CC=gcc-5; export CXX=g++-5 || true
   - test $CC = clang && export CC=clang-3.6; export CXX=clang++-3.6 || true
-  - 'echo "using gcc : : gcc-5 ;" > $HOME/user-config.jam'
   - $CC --version
 # Install boost if it is not in cache
-  - test \! -d boost_temp && mkdir boost_temp && cd boost_temp && wget -O boost.tar.gz http://downloads.sourceforge.net/project/boost/boost/1.58.0/boost_1_58_0.tar.gz && tar xzf boost.tar.gz && cd boost_1_58_0 && ./bootstrap.sh && ./b2 -with-filesystem -with-system -with-thread && cd ../..
-  - export BOOST_ROOT=$HOME/boost_temp/boost_1_58_0
-  - wget -O cmake.tar.gz http://www.cmake.org/files/v3.3/cmake-3.3.0-rc4-Linux-x86_64.tar.gz && tar xvf cmake.tar.gz
+  - wget -O cmake.tar.gz http://www.cmake.org/files/v3.3/cmake-3.3.0-rc4-Linux-x86_64.tar.gz && mkdir cmake_temp && tar xf cmake.tar.gz -C cmake_temp --strip-components=1
 script:
-  - cmake-3.3.0-rc4-Linux-x86_64/bin/cmake .
+  - cmake_temp/bin/cmake .
   - make
 # - make test
 # As tests are in bad state now

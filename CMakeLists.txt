@@ -7,8 +7,6 @@ include(Dart)
 # First, searching for dependencies
 set (BOOST_COMPONENTS
 	system
-	date_time
-	program_options
 	thread
 	filesystem)
 if (BUILD_TESTING)
